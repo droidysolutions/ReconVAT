@@ -1,0 +1,68 @@
+Configuration ([34mmodified[0m, [32madded[0m, [31mtypechanged[0m, [2mdoc[0m):
+  KL_Div = False
+  VAT = True
+  VAT_start = 0
+  XI = 1e-06
+  alpha = 1
+  batch_size = 1                     [2m# 8[0m
+  clip_gradient_norm = 3
+  device = 'cpu'                     [2m# device = 'cuda:0[0m
+  epoches = 1                        [2m# 20000[0m
+  eps = 2
+  iteration = 10
+  learning_rate = 0.001
+  learning_rate_decay_rate = 0.98
+  learning_rate_decay_steps = 1000   [2m# base_lr = learning_rate[0m
+  leave_one_out = None
+  log = True                         [2m# device = "cuda:0" if torch.cuda.is_available() else "cpu"[0m
+  logdir = 'runs/Unet-recons=False-XI=1e-06-eps=2-alpha=1-train_on=small_False_Wind-w_size=31-n_heads=4-lr=0.001-250213-020659'
+  max_lr = 0.0001
+  n_heads = 4
+  onset_stack = True                 [2m# os.environ['CUDA_VISIBLE_DEVICES']=str(GPU)[0m
+  position = True
+  reconstruction = False
+  refresh = False
+  resume_iteration = None
+  root = 'runs'
+  seed = 787597444                   [2m# the random seed for this experiment[0m
+  sequence_length = 327680
+  small = False
+  spec = 'Mel'
+  step_size_up = 100
+  train_batch_size = 1
+  train_on = 'Wind'
+  validation_length = 327680
+  w_size = 31
+Loading 1 group of IDMTGuitarDataset at ./IDMT-SMT-GUITAR_V2
+🔍 Searching in: ./IDMT-SMT-GUITAR_V2\dataset1
+🎵 Found 400 audio files (.flac)
+📜 Found 400 annotation files (.tsv)
+✅ Successfully paired 400 (flac, tsv) files.
+Loading group dataset1: 0it [00:00, ?it/s]Loading group dataset1: 105it [00:00, 1044.18it/s]Loading group dataset1: 246it [00:00, 1171.27it/s]Loading group dataset1: 364it [00:00, 1174.43it/s]Loading group dataset1: 400it [00:00, 1186.38it/s]
+Loading 1 group of IDMTGuitarDataset at ./IDMT-SMT-GUITAR_V2
+🔍 Searching in: ./IDMT-SMT-GUITAR_V2\dataset2
+🎵 Found 261 audio files (.flac)
+📜 Found 261 annotation files (.tsv)
+✅ Successfully paired 252 (flac, tsv) files.
+Loading group dataset2: 0it [00:00, ?it/s]Loading group dataset2: 48it [00:00, 458.74it/s]Loading group dataset2: 101it [00:00, 459.09it/s]Loading group dataset2: 162it [00:00, 523.22it/s]Loading group dataset2: 215it [00:00, 524.14it/s]Loading group dataset2: 252it [00:00, 510.66it/s]
+Loading 1 group of IDMTGuitarDataset at ./IDMT-SMT-GUITAR_V2
+🔍 Searching in: ./IDMT-SMT-GUITAR_V2\dataset3
+🎵 Found 5 audio files (.flac)
+📜 Found 5 annotation files (.tsv)
+✅ Successfully paired 5 (flac, tsv) files.
+Loading group dataset3: 0it [00:00, ?it/s]Loading group dataset3: 5it [00:00, 330.67it/s]
+Loading 1 group of IDMTGuitarDataset at ./IDMT-SMT-GUITAR_V2
+🔍 Searching in: ./IDMT-SMT-GUITAR_V2\dataset3
+🎵 Found 5 audio files (.flac)
+📜 Found 5 annotation files (.tsv)
+✅ Successfully paired 5 (flac, tsv) files.
+Loading group dataset3: 0it [00:00, ?it/s]Loading group dataset3: 5it [00:00, 355.06it/s]
+supervised_set size: 400 .
+unsupervised_set size: 252 .
+validation_dataset size: 5 .
+full_validation size: 5 .
+STFT kernels created, time used = 0.1887 seconds
+STFT filter created, time used = 0.0165 seconds
+Mel filter created, time used = 0.0165 seconds
+supervised_loader
+⚠️ Warning: Audio file ./IDMT-SMT-GUITAR_V2\dataset1\Ibanez Power Strat Clean Bridge+Neck SC\audio\G53-53303-1111-186.flac is too short (110250 samples). Padding with zeros.

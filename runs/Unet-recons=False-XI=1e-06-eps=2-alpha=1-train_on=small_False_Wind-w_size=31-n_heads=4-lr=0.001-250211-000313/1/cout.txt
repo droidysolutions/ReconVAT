@@ -1,0 +1,137 @@
+Configuration ([34mmodified[0m, [32madded[0m, [31mtypechanged[0m, [2mdoc[0m):
+  KL_Div = False
+  VAT = True
+  VAT_start = 0
+  XI = 1e-06
+  alpha = 1
+  batch_size = 1                     [2m# 8[0m
+  clip_gradient_norm = 3
+  device = 'cpu'                     [2m# device = 'cuda:0[0m
+  epoches = 20000
+  eps = 2
+  iteration = 10
+  learning_rate = 0.001
+  learning_rate_decay_rate = 0.98
+  learning_rate_decay_steps = 1000   [2m# base_lr = learning_rate[0m
+  leave_one_out = None
+  log = True                         [2m# device = "cuda:0" if torch.cuda.is_available() else "cpu"[0m
+  logdir = 'runs/Unet-recons=False-XI=1e-06-eps=2-alpha=1-train_on=small_False_Wind-w_size=31-n_heads=4-lr=0.001-250211-000313'
+  max_lr = 0.0001
+  n_heads = 4
+  onset_stack = True                 [2m# os.environ['CUDA_VISIBLE_DEVICES']=str(GPU)[0m
+  position = True
+  reconstruction = False
+  refresh = False
+  resume_iteration = None
+  root = 'runs'
+  seed = 726679137                   [2m# the random seed for this experiment[0m
+  sequence_length = 327680
+  small = False
+  spec = 'Mel'
+  step_size_up = 100
+  train_batch_size = 1
+  train_on = 'Wind'
+  validation_length = 327680
+  w_size = 31
+Loading 1 group of CustomDataset at D:/SU-OS/ReconVAT/CustomDataset
+Loading group train:   0%|                                                                          | 0/5 [00:00<?, ?it/s]Loading group train: 100%|█████████████████████████████████████████████████████████████████| 5/5 [00:00<00:00, 143.98it/s]
+Loading 1 group of CustomDataset at D:/SU-OS/ReconVAT/CustomDataset
+Loading group train:   0%|                                                                          | 0/5 [00:00<?, ?it/s]Loading group train: 100%|█████████████████████████████████████████████████████████████████| 5/5 [00:00<00:00, 125.26it/s]
+Loading 1 group of CustomDataset at D:/SU-OS/ReconVAT/CustomDataset
+Loading group train:   0%|                                                                          | 0/5 [00:00<?, ?it/s]Loading group train: 100%|█████████████████████████████████████████████████████████████████| 5/5 [00:00<00:00, 135.89it/s]
+Loading 1 group of CustomDataset at D:/SU-OS/ReconVAT/CustomDataset
+Loading group train:   0%|                                                                          | 0/5 [00:00<?, ?it/s]Loading group train: 100%|█████████████████████████████████████████████████████████████████| 5/5 [00:00<00:00, 153.80it/s]
+STFT kernels created, time used = 0.1351 seconds
+STFT filter created, time used = 0.0000 seconds
+Mel filter created, time used = 0.0000 seconds
+supervised_loader
+Train Epoch: 1 [0/10(0%)]	Main Loss: 2.217057	Train Epoch: 1 [1/10(10%)]	Main Loss: 2.075252	Train Epoch: 1 [2/10(20%)]	Main Loss: 1.812223	Train Epoch: 1 [3/10(30%)]	Main Loss: 1.210521	Train Epoch: 1 [4/10(40%)]	Main Loss: 0.453399	Train Epoch: 1 [5/10(50%)]	Main Loss: 0.139239	Train Epoch: 1 [6/10(60%)]	Main Loss: 0.118278	Train Epoch: 1 [7/10(70%)]	Main Loss: 0.100558	Train Epoch: 1 [8/10(80%)]	Main Loss: 0.100103	Train Epoch: 1 [9/10(90%)]	Main Loss: 0.096581	                                                                                                    Train Epoch: 1	Loss: 0.565120
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\transcription.py:161: UserWarning: Reference notes are empty.
+  warnings.warn("Reference notes are empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\transcription.py:163: UserWarning: Estimated notes are empty.
+  warnings.warn("Estimated notes are empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\multipitch.py:278: UserWarning: Estimate frequencies are all empty.
+  warnings.warn("Estimate frequencies are all empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\multipitch.py:285: UserWarning: Reference frequencies are all empty.
+  warnings.warn("Reference frequencies are all empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\multipitch.py:325: UserWarning: Reference frequencies are all empty.
+  warnings.warn("Reference frequencies are all empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\sklearn\metrics\_ranking.py:864: RuntimeWarning: invalid value encountered in true_divide
+  recall = tps / tps[-1]
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\transcription.py:161: UserWarning: Reference notes are empty.
+  warnings.warn("Reference notes are empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\transcription.py:163: UserWarning: Estimated notes are empty.
+  warnings.warn("Estimated notes are empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\multipitch.py:278: UserWarning: Estimate frequencies are all empty.
+  warnings.warn("Estimate frequencies are all empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\multipitch.py:285: UserWarning: Reference frequencies are all empty.
+  warnings.warn("Reference frequencies are all empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\multipitch.py:325: UserWarning: Reference frequencies are all empty.
+  warnings.warn("Reference frequencies are all empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\sklearn\metrics\_ranking.py:864: RuntimeWarning: invalid value encountered in true_divide
+  recall = tps / tps[-1]
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\transcription.py:161: UserWarning: Reference notes are empty.
+  warnings.warn("Reference notes are empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\transcription.py:163: UserWarning: Estimated notes are empty.
+  warnings.warn("Estimated notes are empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\multipitch.py:278: UserWarning: Estimate frequencies are all empty.
+  warnings.warn("Estimate frequencies are all empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\multipitch.py:285: UserWarning: Reference frequencies are all empty.
+  warnings.warn("Reference frequencies are all empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\multipitch.py:325: UserWarning: Reference frequencies are all empty.
+  warnings.warn("Reference frequencies are all empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\sklearn\metrics\_ranking.py:864: RuntimeWarning: invalid value encountered in true_divide
+  recall = tps / tps[-1]
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\transcription.py:161: UserWarning: Reference notes are empty.
+  warnings.warn("Reference notes are empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\transcription.py:163: UserWarning: Estimated notes are empty.
+  warnings.warn("Estimated notes are empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\multipitch.py:278: UserWarning: Estimate frequencies are all empty.
+  warnings.warn("Estimate frequencies are all empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\multipitch.py:285: UserWarning: Reference frequencies are all empty.
+  warnings.warn("Reference frequencies are all empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\multipitch.py:325: UserWarning: Reference frequencies are all empty.
+  warnings.warn("Reference frequencies are all empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\sklearn\metrics\_ranking.py:864: RuntimeWarning: invalid value encountered in true_divide
+  recall = tps / tps[-1]
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\transcription.py:161: UserWarning: Reference notes are empty.
+  warnings.warn("Reference notes are empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\multipitch.py:285: UserWarning: Reference frequencies are all empty.
+  warnings.warn("Reference frequencies are all empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\multipitch.py:325: UserWarning: Reference frequencies are all empty.
+  warnings.warn("Reference frequencies are all empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\sklearn\metrics\_ranking.py:864: RuntimeWarning: invalid value encountered in true_divide
+  recall = tps / tps[-1]
+                            note precision                : 0.000 ± 0.000
+                            note recall                   : 0.000 ± 0.000
+                            note f1                       : 0.000 ± 0.000
+                            note overlap                  : 0.000 ± 0.000
+               note-with-offsets precision                : 0.000 ± 0.000
+               note-with-offsets recall                   : 0.000 ± 0.000
+               note-with-offsets f1                       : 0.000 ± 0.000
+               note-with-offsets overlap                  : 0.000 ± 0.000
+                           frame f1                       : 0.000 ± 0.000
+                        MusicNet micro_avg_P              : nan ± nan
+                           frame precision                : 0.000 ± 0.000
+                           frame recall                   : 0.000 ± 0.000
+                           frame accuracy                 : 0.000 ± 0.000
+                           frame substitution_error       : 0.000 ± 0.000
+                           frame miss_error               : 0.000 ± 0.000
+                           frame false_alarm_error        : 0.000 ± 0.000
+                           frame total_error              : 0.000 ± 0.000
+                           frame chroma_precision         : 0.000 ± 0.000
+                           frame chroma_recall            : 0.000 ± 0.000
+                           frame chroma_accuracy          : 0.000 ± 0.000
+                           frame chroma_substitution_error: 0.000 ± 0.000
+                           frame chroma_miss_error        : 0.000 ± 0.000
+                           frame chroma_false_alarm_error : 0.000 ± 0.000
+                           frame chroma_total_error       : 0.000 ± 0.000
+Eval Epoch: 1 [0/5(0%)]	Main Loss: 0.052851Eval Epoch: 1 [1/5(20%)]	Main Loss: 0.047464Eval Epoch: 1 [2/5(40%)]	Main Loss: 0.046254Eval Epoch: 1 [3/5(60%)]	Main Loss: 0.047197Eval Epoch: 1 [4/5(80%)]	Main Loss: 0.048379                                                                                                    Train Epoch: 2 [0/10(0%)]	Main Loss: 0.099510	Train Epoch: 2 [1/10(10%)]	Main Loss: 0.099253	Train Epoch: 2 [2/10(20%)]	Main Loss: 0.096389	Train Epoch: 2 [3/10(30%)]	Main Loss: 0.095464	Train Epoch: 2 [4/10(40%)]	Main Loss: 0.100988	Train Epoch: 2 [5/10(50%)]	Main Loss: 0.099217	Train Epoch: 2 [6/10(60%)]	Main Loss: 0.098088	Train Epoch: 2 [7/10(70%)]	Main Loss: 0.096227	Train Epoch: 2 [8/10(80%)]	Main Loss: 0.093583	Train Epoch: 2 [9/10(90%)]	Main Loss: 0.096636	                                                                                                    Train Epoch: 2	Loss: 0.097483
+Train Epoch: 3 [0/10(0%)]	Main Loss: 0.099723	Train Epoch: 3 [1/10(10%)]	Main Loss: 0.093345	Train Epoch: 3 [2/10(20%)]	Main Loss: 0.098823	Train Epoch: 3 [3/10(30%)]	Main Loss: 0.096557	Train Epoch: 3 [4/10(40%)]	Main Loss: 0.093382	Train Epoch: 3 [5/10(50%)]	Main Loss: 0.095737	Train Epoch: 3 [6/10(60%)]	Main Loss: 0.095514	Train Epoch: 3 [7/10(70%)]	Main Loss: 0.103342	Train Epoch: 3 [8/10(80%)]	Main Loss: inf	Train Epoch: 3 [9/10(90%)]	Main Loss: 0.097340	                                                                                                    Train Epoch: 3	Loss: inf
+Train Epoch: 4 [0/10(0%)]	Main Loss: 0.096219	Train Epoch: 4 [1/10(10%)]	Main Loss: 0.098778	Train Epoch: 4 [2/10(20%)]	Main Loss: 0.098676	Train Epoch: 4 [3/10(30%)]	Main Loss: 0.097602	Train Epoch: 4 [4/10(40%)]	Main Loss: 0.097328	Train Epoch: 4 [5/10(50%)]	Main Loss: 0.093294	Train Epoch: 4 [6/10(60%)]	Main Loss: 0.094620	Train Epoch: 4 [7/10(70%)]	Main Loss: 0.096152	Train Epoch: 4 [8/10(80%)]	Main Loss: 0.095480	Train Epoch: 4 [9/10(90%)]	Main Loss: 0.093291	                                                                                                    Train Epoch: 4	Loss: 0.096111
+Train Epoch: 5 [0/10(0%)]	Main Loss: 0.095713	Train Epoch: 5 [1/10(10%)]	Main Loss: 0.096916	Train Epoch: 5 [2/10(20%)]	Main Loss: 0.095093	Train Epoch: 5 [3/10(30%)]	Main Loss: 0.095651	Train Epoch: 5 [4/10(40%)]	Main Loss: 0.095265	Train Epoch: 5 [5/10(50%)]	Main Loss: 0.095763	Train Epoch: 5 [6/10(60%)]	Main Loss: 0.096528	Train Epoch: 5 [7/10(70%)]	Main Loss: 0.094860	Train Epoch: 5 [8/10(80%)]	Main Loss: 0.093683	Train Epoch: 5 [9/10(90%)]	Main Loss: 0.096024	                                                                                                    Train Epoch: 5	Loss: 0.095529
+Train Epoch: 6 [0/10(0%)]	Main Loss: 0.096665	Train Epoch: 6 [1/10(10%)]	Main Loss: 0.092091	Train Epoch: 6 [2/10(20%)]	Main Loss: 0.093929	Train Epoch: 6 [3/10(30%)]	Main Loss: 0.091597	Train Epoch: 6 [4/10(40%)]	Main Loss: 0.096182	Train Epoch: 6 [5/10(50%)]	Main Loss: 0.097971	Train Epoch: 6 [6/10(60%)]	Main Loss: 0.096334	Train Epoch: 6 [7/10(70%)]	Main Loss: 0.095747	Train Epoch: 6 [8/10(80%)]	Main Loss: 0.097155	Train Epoch: 6 [9/10(90%)]	Main Loss: 0.097779	                                                                                                    Train Epoch: 6	Loss: 0.095534
+Train Epoch: 7 [0/10(0%)]	Main Loss: 0.095895	Train Epoch: 7 [1/10(10%)]	Main Loss: 0.232985	Train Epoch: 7 [2/10(20%)]	Main Loss: 0.095880	Train Epoch: 7 [3/10(30%)]	Main Loss: 0.095872	Train Epoch: 7 [4/10(40%)]	Main Loss: 0.095164	Train Epoch: 7 [5/10(50%)]	Main Loss: 0.093528	Train Epoch: 7 [6/10(60%)]	Main Loss: 0.095475	Train Epoch: 7 [7/10(70%)]	Main Loss: 0.096636	Train Epoch: 7 [8/10(80%)]	Main Loss: 0.098076	Train Epoch: 7 [9/10(90%)]	Main Loss: 0.098208	                                                                                                    Train Epoch: 7	Loss: 0.102544
+Train Epoch: 8 [0/10(0%)]	Main Loss: 0.096864	Train Epoch: 8 [1/10(10%)]	Main Loss: 0.097828	Train Epoch: 8 [2/10(20%)]	Main Loss: 0.097705	Train Epoch: 8 [3/10(30%)]	Main Loss: 0.100145	Train Epoch: 8 [4/10(40%)]	Main Loss: 0.097441	Train Epoch: 8 [5/10(50%)]	Main Loss: 0.097338	Train Epoch: 8 [6/10(60%)]	Main Loss: 0.097803	Train Epoch: 8 [7/10(70%)]	Main Loss: 0.098659	Train Epoch: 8 [8/10(80%)]	Main Loss: 0.096405	Train Epoch: 8 [9/10(90%)]	Main Loss: 0.096660	                                                                                                    Train Epoch: 8	Loss: 0.097227
+Train Epoch: 9 [0/10(0%)]	Main Loss: 0.096479	Train Epoch: 9 [1/10(10%)]	Main Loss: 0.096982	Train Epoch: 9 [2/10(20%)]	Main Loss: 0.098228	Train Epoch: 9 [3/10(30%)]	Main Loss: 0.098591	Train Epoch: 9 [4/10(40%)]	Main Loss: 0.097008	Train Epoch: 9 [5/10(50%)]	Main Loss: 0.097274	Train Epoch: 9 [6/10(60%)]	Main Loss: 0.095365	Train Epoch: 9 [7/10(70%)]	Main Loss: 0.097551	Train Epoch: 9 [8/10(80%)]	Main Loss: 0.096712	Train Epoch: 9 [9/10(90%)]	Main Loss: 0.095222	                                                                                                    Train Epoch: 9	Loss: 0.096879
+Train Epoch: 10 [0/10(0%)]	Main Loss: 0.097612	Train Epoch: 10 [1/10(10%)]	Main Loss: 0.096181	Train Epoch: 10 [2/10(20%)]	Main Loss: 0.093719	

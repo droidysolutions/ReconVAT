@@ -1,0 +1,649 @@
+import json
+import os
+from abc import abstractmethod
+from glob import glob
+import sys
+import pickle
+import pandas as pd
+
+
+import numpy as np
+import soundfile
+from torch.utils.data import Dataset
+from tqdm import tqdm
+
+from .constants import *
+from .midi import parse_midi
+
+
+class PianoRollAudioDataset(Dataset):
+    def __init__(self, path, groups=None, sequence_length=None, seed=42, refresh=False, device='cpu'):
+        self.path = path
+        self.groups = groups if groups is not None else self.available_groups()
+        
+        self.sequence_length = sequence_length
+        self.device = device
+        self.random = np.random.RandomState(seed)
+        self.refresh = refresh
+
+        self.data = []
+        print(f"Loading {len(self.groups)} group{'s' if len(self.groups) > 1 else ''} "
+              f"of {self.__class__.__name__} at {path}")
+        for group in self.groups:
+            for input_files in tqdm(self.files(group), desc='Loading group %s' % group): #self.files is defined in MAPS class
+                self.data.append(self.load(*input_files)) # self.load is a function defined below. It first loads all data into memory first
+    def __getitem__(self, index):
+        data = self.data[index]
+        result = dict(path=data['path'])
+
+        audio_length = len(data['audio'])
+
+    # 🔍 Fix: Ensure sequence_length is set
+        if self.sequence_length is None:
+            print(f"⚠️ Warning: sequence_length is None! Setting to default 327680.")
+            self.sequence_length = 327680  # Set a default value
+
+
+        # 🛑 Ensure the audio is at least `sequence_length`
+        if audio_length < self.sequence_length:
+            print(f"⚠️ Warning: Audio file {data['path']} is too short ({audio_length} samples). Padding with zeros.")
+            padded_audio = torch.zeros(self.sequence_length, dtype=data['audio'].dtype)
+            padded_audio[:audio_length] = data['audio']
+            data['audio'] = padded_audio
+            audio_length = self.sequence_length  # Now it's equal to sequence_length
+
+        # 🛠️ Fix: Ensure valid randint range
+        max_start = max(audio_length - self.sequence_length, 1)  # Ensure it's at least 1
+        step_begin = self.random.randint(max_start) // HOP_LENGTH
+
+        n_steps = self.sequence_length // HOP_LENGTH
+        step_end = step_begin + n_steps
+        begin = step_begin * HOP_LENGTH
+        end = begin + self.sequence_length
+
+        result['audio'] = data['audio'][begin:end].to(self.device)
+
+        # 🔍 Fix label shape mismatch
+        expected_steps = (self.sequence_length - 1) // HOP_LENGTH + 1  # Ensure label matches STFT output
+        label = data['label'][step_begin:step_end, :].to(self.device)
+
+        if label.shape[0] != expected_steps:
+            print(f"⚠️ Mismatch: Label shape {label.shape} vs. Expected {expected_steps}")
+            padded_label = torch.zeros((expected_steps, label.shape[1]), dtype=label.dtype)
+            padded_label[:label.shape[0], :] = label  # Pad label matrix
+            label = padded_label
+
+        result['label'] = label
+        result['velocity'] = data['velocity'][step_begin:step_end, :].to(self.device)
+        result['start_idx'] = begin
+
+        result['audio'] = result['audio'].float().div_(32768.0)
+        result['onset'] = (result['label'] == 3).float()
+        result['offset'] = (result['label'] == 1).float()
+        result['frame'] = (result['label'] > 1).float()
+        result['velocity'] = result['velocity'].float().div_(128.0)
+
+        return result
+   
+
+
+    def __len__(self):
+        return len(self.data)
+
+    @classmethod # This one seems optional?
+    @abstractmethod # This is to make sure other subclasses also contain this method
+    def available_groups(cls):
+        """return the names of all available groups"""
+        raise NotImplementedError
+
+    @abstractmethod
+    def files(self, group):
+        """return the list of input files (audio_filename, tsv_filename) for this group"""
+        raise NotImplementedError
+
+    def load(self, audio_path, tsv_path):
+        """
+        load an audio track and the corresponding labels
+
+        Returns
+        -------
+            A dictionary containing the following data:
+
+            path: str
+                the path to the audio file
+
+            audio: torch.ShortTensor, shape = [num_samples]
+                the raw waveform
+
+            label: torch.ByteTensor, shape = [num_steps, midi_bins]
+                a matrix that contains the onset/offset/frame labels encoded as:
+                3 = onset, 2 = frames after onset, 1 = offset, 0 = all else
+
+            velocity: torch.ByteTensor, shape = [num_steps, midi_bins]
+                a matrix that contains MIDI velocity values at the frame locations
+        """
+        saved_data_path = audio_path.replace('.flac', '.pt').replace('.wav', '.pt')
+        if os.path.exists(saved_data_path) and self.refresh==False: # Check if .pt files exist, if so just load the files
+            return torch.load(saved_data_path)
+        # Otherwise, create the .pt files
+        audio, sr = soundfile.read(audio_path, dtype='int16')
+        assert sr == SAMPLE_RATE
+
+        audio = torch.ShortTensor(audio) # convert numpy array to pytorch tensor
+        audio_length = len(audio)
+
+        n_keys = MAX_MIDI - MIN_MIDI + 1
+        n_steps = (audio_length - 1) // HOP_LENGTH + 1 # This will affect the labels time steps
+
+        label = torch.zeros(n_steps, n_keys, dtype=torch.uint8)
+        velocity = torch.zeros(n_steps, n_keys, dtype=torch.uint8)
+
+        tsv_path = tsv_path
+        midi = np.loadtxt(tsv_path, delimiter='\t', skiprows=1)
+        
+
+        # Ensure midi is always 2D, even if there's only one row
+        if midi.ndim == 1:
+            midi = midi.reshape(1, -1)  # Convert (4,) to (1,4)
+
+
+#         print(f'audio size = {audio.shape}')
+#         print(f'label size = {label.shape}')
+        for onset, offset, note, vel in midi:
+            left = int(round(onset * SAMPLE_RATE / HOP_LENGTH)) # Convert time to time step
+            onset_right = min(n_steps, left + HOPS_IN_ONSET) # Ensure the time step of onset would not exceed the last time step
+            frame_right = int(round(offset * SAMPLE_RATE / HOP_LENGTH))
+            frame_right = min(n_steps, frame_right) # Ensure the time step of frame would not exceed the last time step
+            offset_right = min(n_steps, frame_right + HOPS_IN_OFFSET)
+
+            f = int(note) - MIN_MIDI
+            label[left:onset_right, f] = 3
+            label[onset_right:frame_right, f] = 2
+            label[frame_right:offset_right, f] = 1
+            velocity[left:frame_right, f] = vel
+
+        data = dict(path=audio_path, audio=audio, label=label, velocity=velocity)
+        torch.save(data, saved_data_path)
+        return data
+
+
+class MAESTRO(PianoRollAudioDataset):
+
+    def __init__(self, path='../../public_data/MAESTRO/', groups=None, sequence_length=None, seed=42, refresh=False, device='cpu'):
+        super().__init__(path, groups if groups is not None else ['train'], sequence_length, seed, refresh, device)
+
+    @classmethod
+    def available_groups(cls):
+        return ['train', 'validation', 'test']
+
+    def files(self, group):
+        if group not in self.available_groups():
+            # year-based grouping
+            flacs = sorted(glob(os.path.join(self.path, group, '*.flac')))
+            if len(flacs) == 0:
+                flacs = sorted(glob(os.path.join(self.path, group, '*.wav')))
+
+            midis = sorted(glob(os.path.join(self.path, group, '*.midi')))
+            files = list(zip(flacs, midis))
+            if len(files) == 0:
+                raise RuntimeError(f'Group {group} is empty')
+        else:
+            metadata = json.load(open(os.path.join(self.path, 'maestro-v2.0.0.json')))
+            files = sorted([(os.path.join(self.path, row['audio_filename'].replace('.wav', '.flac')),
+                             os.path.join(self.path, row['midi_filename'])) for row in metadata if row['split'] == group])
+
+            files = [(audio if os.path.exists(audio) else audio.replace('.flac', '.wav'), midi) for audio, midi in files]
+
+        result = []
+        for audio_path, midi_path in files:
+            tsv_filename = midi_path.replace('.midi', '.tsv').replace('.mid', '.tsv')
+            if not os.path.exists(tsv_filename):
+                midi = parse_midi(midi_path)
+                np.savetxt(tsv_filename, midi, fmt='%.6f', delimiter='\t', header='onset,offset,note,velocity')
+            result.append((audio_path, tsv_filename))
+        return result
+
+
+class MAPS(PianoRollAudioDataset):
+    def __init__(self, path='./MAPS', groups=None, sequence_length=None, overlap=True,
+                 seed=42, refresh=False, device='cpu', supersmall=False):
+        self.overlap = overlap
+        self.supersmall = supersmall
+        super().__init__(path, groups if groups is not None else ['ENSTDkAm', 'ENSTDkCl'], sequence_length, seed, refresh, device)
+
+    @classmethod
+    def available_groups(cls):
+        return ['AkPnBcht', 'AkPnBsdf', 'AkPnCGdD', 'AkPnStgb', 'ENSTDkAm', 'ENSTDkCl', 'SptkBGAm', 'SptkBGCl', 'StbgTGd2']
+
+    def files(self, group):
+        flacs = glob(os.path.join(self.path, 'flac', '*_%s.flac' % group))
+        if self.overlap==False:
+            with open('overlapping.pkl', 'rb') as f:
+                test_names = pickle.load(f)
+            filtered_flacs = []    
+            for i in flacs:
+                if any([substring in i for substring in test_names]):
+                    pass
+                else:
+                    filtered_flacs.append(i)
+            flacs = sorted(filtered_flacs)
+            if self.supersmall==True:
+#                 print(sorted(filtered_flacs))
+                flacs = [sorted(filtered_flacs)[3]]
+        # tsvs = [f.replace('/flac/', '/tsv/matched/').replace('.flac', '.tsv') for f in flacs]
+        tsvs = [f.replace('/flac/', '/tsvs/').replace('.flac', '.tsv') for f in flacs]
+#         print(flacs)
+        assert(all(os.path.isfile(flac) for flac in flacs))
+        assert(all(os.path.isfile(tsv) for tsv in tsvs))
+
+        return sorted(zip(flacs, tsvs))
+
+class MusicNet(PianoRollAudioDataset):
+    def __init__(self, path='./MusicNet', groups=None, sequence_length=None, seed=42, refresh=False, device='cpu'):
+        super().__init__(path, groups if groups is not None else ['train'], sequence_length, seed, refresh, device)
+#path='D:/SU-OS/musicnet/Custom_musicnet'
+#'D:/SU-OS/ReconVAT/CustomDataset'
+#path='./MusicNet'
+
+    @classmethod
+    def available_groups(cls):
+        return ['train', 'test']
+
+    def read_id(self, path, group, mode):
+        train_meta = pd.read_csv(os.path.join(path,f'{mode}_metadata.csv'))
+        return train_meta[train_meta['ensemble'].str.contains(group)]['id'].values    
+    
+    def appending_flac_tsv(self, id_list, mode):
+        flacs = []
+        tsvs = []
+        for i in id_list:
+            flacs.extend(glob(os.path.join(self.path, f"{mode}_data", f"{i}.flac")))
+            tsvs.extend(glob(os.path.join(self.path, f"tsv_{mode}_labels/{i}.tsv")))
+        flacs = sorted(flacs)
+        tsvs = sorted(tsvs)   
+        return flacs, tsvs
+
+    def files(self, group):
+        string_keys = ['Solo Violin', 'Violin and Harpsichord',
+                'Accompanied Violin', 'String Quartet',
+                'String Sextet', 'Viola Quintet',
+                'Solo Cello', 'Accompanied Cello']      
+        
+        wind_keys = ['Accompanied Clarinet', 'Clarinet Quintet',
+                    'Pairs Clarinet-Horn-Bassoon', 'Clarinet-Cello-Piano Trio',
+                    'Wind Octet', 'Wind Quintet']
+        
+        
+        
+        train_meta = pd.read_csv(os.path.join(self.path,f'train_metadata.csv'))
+        if group == 'small test':
+            types = ('2303.flac', '2382.flac', '1819.flac')
+            flacs = []
+            for i in types:
+                flacs.extend(glob(os.path.join(self.path, 'test_data', i)))
+            flacs = sorted(flacs)
+            tsvs = sorted(glob(os.path.join(self.path, f'tsv_test_labels/*.tsv')))   
+        elif group == 'train_string_l':
+            types = np.array([0])
+            for key in string_keys:
+                l= train_meta[train_meta['ensemble'].str.contains(key)]['id'].values[:1]
+                types = np.concatenate((types,l))
+            types = np.delete(types, 0)
+            flacs, tsvs = self.appending_flac_tsv(types, 'train')
+        elif group == 'train_string_ul':
+            types = np.array([0])
+            for key in string_keys:
+                l= train_meta[train_meta['ensemble'].str.contains(key)]['id'].values[1:]
+                types = np.concatenate((types,l))
+            types = np.delete(types, 0)
+            flacs, tsvs = self.appending_flac_tsv(types, 'train')                
+            
+        elif group == 'train_violin_l':
+            type1 = self.read_id(self.path, 'Solo Violin', 'train')
+            type2 = self.read_id(self.path, 'Accompanied Violin', 'train')    
+            types = np.concatenate((type1,type2))            
+            flacs, tsvs = self.appending_flac_tsv(types, 'train')
+            
+        elif group == 'train_violin_ul':
+            type1 = self.read_id(self.path, 'String Quartet', 'train')
+            type2 = self.read_id(self.path, 'String Sextet', 'train')
+            types = np.concatenate((type1,type2))
+            flacs, tsvs = self.appending_flac_tsv(types, 'train')  
+            
+        elif group == 'test_violin':
+            types = ('2106', '2191', '2298', '2628')
+            flacs, tsvs = self.appending_flac_tsv(types, 'test')
+                      
+        elif group == 'train_wind_l':
+            types = np.array([0])
+            for key in wind_keys:
+                l= train_meta[train_meta['ensemble'].str.contains(key)]['id'].values[:1]
+                types = np.concatenate((types,l))
+            types = np.delete(types, 0)
+            flacs, tsvs = self.appending_flac_tsv(types, 'train')
+        elif group == 'train_wind_ul':
+            types = np.array([0])
+            for key in wind_keys:
+                l= train_meta[train_meta['ensemble'].str.contains(key)]['id'].values[1:]
+                types = np.concatenate((types,l))
+            types = np.delete(types, 0)
+            flacs, tsvs = self.appending_flac_tsv(types, 'train')                   
+            
+        elif group == 'test_wind':
+            types = ('1819', '2416')
+            flacs, tsvs = self.appending_flac_tsv(types, 'test') 
+            
+        elif group == 'train_flute_l':
+            types = ('2203',)
+            flacs, tsvs = self.appending_flac_tsv(types, 'train')     
+        elif group == 'train_flute_ul':
+            types = np.array([0])
+            for key in wind_keys:
+                l= train_meta[train_meta['ensemble'].str.contains(key)]['id'].values[:]
+                types = np.concatenate((types,l)) 
+            types = np.delete(types, 0)
+            types = np.concatenate((types,('2203',)))
+            
+            flacs, tsvs = self.appending_flac_tsv(types, 'train')
+            
+        elif group == 'test_flute':
+            types = ('2204',)
+            flacs, tsvs = self.appending_flac_tsv(types, 'train')             
+            
+        else:
+            types = self.read_id(self.path, group, 'train')
+            flacs = []
+            for i in types:
+                flacs.extend(glob(os.path.join(self.path, 'train_data', f"{i}.flac")))
+            flacs = sorted(flacs)
+            tsvs = sorted(glob(os.path.join(self.path, f'tsv_train_labels/*.tsv')))   
+#         else:
+#             flacs = sorted(glob(os.path.join(self.path, f'{group}_data/*.flac')))
+#             tsvs = sorted(glob(os.path.join(self.path, f'tsv_{group}_labels/*.tsv')))            
+#         else:
+#             flacs = sorted(glob(os.path.join(self.path, f'{group}_data/*.flac')))
+#             tsvs = sorted(glob(os.path.join(self.path, f'tsv_{group}_labels/*.tsv')))
+
+        assert(all(os.path.isfile(flac) for flac in flacs))
+        assert(all(os.path.isfile(tsv) for tsv in tsvs))
+
+        return zip(flacs, tsvs)
+    
+    
+class Guqin(PianoRollAudioDataset):
+    def __init__(self, path='./Guqin', groups=None, sequence_length=None, seed=42, refresh=False, device='cpu'):
+        super().__init__(path, groups if groups is not None else ['train'], sequence_length, seed, refresh, device)
+
+    @classmethod
+    def available_groups(cls):
+        return ['train_l', 'train_ul', 'test']
+
+    def read_id(self, path, group, mode):
+        train_meta = pd.read_csv(os.path.join(path,f'{mode}_metadata.csv'))
+        return train_meta[train_meta['ensemble'].str.contains(group)]['id'].values    
+    
+    def appending_flac_tsv(self, id_list, mode):
+        flacs = []
+        tsvs = []
+        for i in id_list:
+            flacs.extend(glob(os.path.join(self.path, f"{mode}_data", f"{i}.flac")))
+            tsvs.extend(glob(os.path.join(self.path, f"tsv_{mode}_labels/{i}.tsv")))
+        flacs = sorted(flacs)
+        tsvs = sorted(tsvs)   
+        return flacs, tsvs
+
+    def files(self, group):
+        if group=='train_l':
+            types = ['jiou', 'siang', 'ciou', 'yi', 'yu', 'feng', 'yang'] 
+            flacs = []
+            tsvs = []
+            for i in types:
+                flacs.extend(glob(os.path.join(self.path, 'audio', i + '.flac')))
+                tsvs.extend(glob(os.path.join(self.path, 'tsv_label', i + '.tsv')))
+            flacs = sorted(flacs)
+            tsvs = sorted(tsvs)          
+            return zip(flacs, tsvs)
+            
+        elif group == 'train_ul':
+            types = [
+                    ] 
+            flacs = []
+            tsvs = []
+            for i in types:
+                flacs.extend(glob(os.path.join(self.path, 'audio', i + '.flac')))
+                tsvs.extend(glob(os.path.join(self.path, 'tsv_label', i + '.tsv')))
+            flacs = sorted(flacs)
+            tsvs = sorted(tsvs)       
+            return zip(flacs, tsvs)
+            
+        elif group == 'test':
+            types = ['gu', 'guan', 'liang',
+                     ]
+            flacs = []
+            tsvs = []
+            for i in types:
+                flacs.extend(glob(os.path.join(self.path, 'audio', i + '.flac')))
+                tsvs.extend(glob(os.path.join(self.path, 'tsv_label', i + '.tsv')))
+            flacs = sorted(flacs)
+            tsvs = sorted(tsvs) 
+            print(f'flacs = {flacs}')
+            print(f'tsvs = {tsvs}')
+            return zip(flacs, tsvs)
+            
+            
+        else:
+            raise Exception("Please choose a valid group")
+
+
+class Corelli(PianoRollAudioDataset):
+    def __init__(self, path='./Application_String', groups=None, sequence_length=None, overlap=True,
+                 seed=42, refresh=False, device='cpu', supersmall=False):
+        self.overlap = overlap
+        self.supersmall = supersmall
+        super().__init__(path, groups, sequence_length, seed, refresh, device)
+
+    @classmethod
+    def available_groups(cls):
+        return ['op6_no1', 'op6_no2', 'op6_no3']
+
+    def files(self, group):
+        flacs = glob(os.path.join(self.path, group, '*.flac'))
+        
+        if self.overlap==False:
+            with open('overlapping.pkl', 'rb') as f:
+                test_names = pickle.load(f)
+            filtered_flacs = []    
+            for i in flacs:
+                if any([substring in i for substring in test_names]):
+                    pass
+                else:
+                    filtered_flacs.append(i)
+            flacs = sorted(filtered_flacs)
+            if self.supersmall==True:
+#                 print(sorted(filtered_flacs))
+                flacs = [sorted(filtered_flacs)[3]]
+        # tsvs = [f.replace('/flac/', '/tsv/matched/').replace('.flac', '.tsv') for f in flacs]
+        tsvs = [f.replace('/flac/', '/tsvs/').replace('.flac', '.tsv') for f in flacs]
+#         print(flacs)
+        assert(all(os.path.isfile(flac) for flac in flacs))
+        assert(all(os.path.isfile(tsv) for tsv in tsvs))
+        
+        return sorted(zip(flacs, tsvs))
+    
+    
+class Application_Dataset(Dataset):
+    def __init__(self, path, seed=42, device='cpu'):
+        self.path = path
+        
+        self.device = device
+
+        self.data = []
+        for input_files in tqdm(self.files(path), desc='Loading files'): #self.files is defined in MAPS class
+            self.data.append(self.load(input_files)) # self.load is a function defined below. It first loads all data into memory first
+    def __getitem__(self, index):
+
+        data = self.data[index]
+        result = dict(path=data['path'])
+
+        audio_length = len(data['audio'])
+        result['audio'] = data['audio'].to(self.device)
+
+        result['audio'] = result['audio'].float().div_(32768.0) # converting to float by dividing it by 2^15
+        return result
+
+    def __len__(self):
+        return len(self.data)
+
+
+    @abstractmethod
+    def files(self, group):
+        # Only need to load flac files
+        flacs = glob(os.path.join(self.path, '*.flac'))
+        flacs.extend(glob(os.path.join(self.path, '*.wav'))) # If there are wav files, also load them
+        assert(all(os.path.isfile(flac) for flac in flacs))
+        
+        return flacs
+
+    def load(self, audio_path):
+        """
+        load an audio track and the corresponding labels
+
+        Returns
+        -------
+            A dictionary containing the following data:
+
+            path: str
+                the path to the audio file
+
+            audio: torch.ShortTensor, shape = [num_samples]
+                the raw waveform
+
+            label: torch.ByteTensor, shape = [num_steps, midi_bins]
+                a matrix that contains the onset/offset/frame labels encoded as:
+                3 = onset, 2 = frames after onset, 1 = offset, 0 = all else
+
+            velocity: torch.ByteTensor, shape = [num_steps, midi_bins]
+                a matrix that contains MIDI velocity values at the frame locations
+        """
+        saved_data_path = audio_path.replace('.flac', '.pt').replace('.wav', '.pt')
+        # Otherwise, create the .pt files
+        audio, sr = soundfile.read(audio_path, dtype='int16')
+        # 
+        assert sr == SAMPLE_RATE, f'Please make sure the sampling rate is 16k.\n{saved_data_path} has a sampling of {sr}'
+ 
+            
+        audio = torch.ShortTensor(audio) # convert numpy array to pytorch tensor
+        audio_length = len(audio)
+
+        data = dict(path=audio_path, audio=audio)
+        return data
+    
+    
+
+class Application_Wind(PianoRollAudioDataset):
+    def __init__(self, path='./Application_Wind', groups=None, sequence_length=None, overlap=True,
+                 seed=42, refresh=False, device='cpu', supersmall=False):
+        self.overlap = overlap
+        self.supersmall = supersmall
+        super().__init__(path, groups, sequence_length, seed, refresh, device)
+
+    @classmethod
+    def available_groups(cls):
+        return ['dummy']
+
+    def files(self, group):
+        flacs = glob(os.path.join(self.path, '*.flac'))
+        
+        if self.overlap==False:
+            with open('overlapping.pkl', 'rb') as f:
+                test_names = pickle.load(f)
+            filtered_flacs = []    
+            for i in flacs:
+                if any([substring in i for substring in test_names]):
+                    pass
+                else:
+                    filtered_flacs.append(i)
+            flacs = sorted(filtered_flacs)
+            if self.supersmall==True:
+#                 print(sorted(filtered_flacs))
+                flacs = [sorted(filtered_flacs)[3]]
+        # tsvs = [f.replace('/flac/', '/tsv/matched/').replace('.flac', '.tsv') for f in flacs]
+        tsvs = [f.replace('/flac/', '/tsvs/').replace('.flac', '.tsv') for f in flacs]
+#         print(flacs)
+        assert(all(os.path.isfile(flac) for flac in flacs))
+        assert(all(os.path.isfile(tsv) for tsv in tsvs))
+        
+        return sorted(zip(flacs, tsvs))
+
+
+#Shahzad 
+class CustomDataset(PianoRollAudioDataset):
+    def __init__(self, path='D:/SU-OS/ReconVAT/CustomDataset', groups=None, sequence_length=None, seed=42, refresh=False, device='cpu'):
+        super().__init__(path, groups if groups is not None else ['train'], sequence_length, seed, refresh, device)
+
+    @classmethod
+    def available_groups(cls):
+        return ['train']  # You can add more groups if needed (e.g., 'test')
+
+    def files(self, group):
+        # Load all .flac and .tsv files from the custom dataset directory
+        flacs = sorted(glob(os.path.join(self.path, '*.flac')))
+        tsvs = sorted(glob(os.path.join(self.path, '*.tsv')))
+
+        # Ensure that each .flac file has a corresponding .tsv file
+        assert len(flacs) == len(tsvs), "Mismatch between .flac and .tsv files."
+        assert all(os.path.isfile(f) for f in flacs), "Some .flac files are missing."
+        assert all(os.path.isfile(f) for f in tsvs), "Some .tsv files are missing."
+
+        return list(zip(flacs, tsvs))
+    
+
+    import os
+import glob
+from torch.utils.data import Dataset
+
+class IDMTGuitarDataset(PianoRollAudioDataset):
+    def __init__(self, path='./IDMT-SMT-GUITAR_V2', groups=None, sequence_length=None, seed=42, refresh=False, device='cpu'):
+        super().__init__(path, groups if groups is not None else ['dataset1'], sequence_length, seed, refresh, device)
+
+    @classmethod
+    def available_groups(cls):
+        return ['dataset1', 'dataset2', 'dataset3']
+    def files(self, group):
+        """Return list of (audio_file, tsv_file) pairs for the selected dataset group, including subdirectories."""
+        
+        assert group in self.available_groups(), f"❌ Invalid dataset group: {group}"
+
+        # Base dataset path (where dataset1, dataset2, dataset3 are stored)
+        dataset_path = os.path.join(self.path, group)
+
+        # Find all .flac and .tsv files in subdirectories
+        flacs = sorted(glob.glob(os.path.join(dataset_path, "**", "*.flac"), recursive=True))
+        tsvs = sorted(glob.glob(os.path.join(dataset_path, "**", "*.tsv"), recursive=True))
+
+        # Debugging output
+        print(f"🔍 files Searching in: {dataset_path}")
+        print(f"🎵 Found {len(flacs)} audio files (.flac)")
+        print(f"📜 Found {len(tsvs)} annotation files (.tsv)")
+
+        # Ensure that the number of .flac files matches the number of .tsv files
+        assert len(flacs) == len(tsvs), f"❌ Mismatch! {len(flacs)} .flac files ≠ {len(tsvs)} .tsv files in {group}"
+
+        # Ensure only (flac, tsv) pairs that match
+        paired_flacs = []
+        paired_tsvs = []
+        for flac in flacs:
+            #flac_name = os.path.splitext(os.path.basename(flac))[0]  # Get filename without extension
+            #tsv = flac.replace("audio", f"annotation").replace(".flac",".tsv")  # Expected tsv path
+            tsv = flac.replace(os.path.sep + "audio" + os.path.sep, os.path.sep + "annotation" + os.path.sep).replace(".flac", ".tsv")
+            # print(f"✅ flac_name {flac_name} 0000000000000")
+            # print(f"✅ Path {flac} ------- {tsv}")
+            if tsv in tsvs:
+                paired_flacs.append(flac)
+                paired_tsvs.append(tsv)
+
+        print(f"✅ Successfully paired {len(paired_flacs)} (flac, tsv) files.")
+        return
+        return zip(paired_flacs, paired_tsvs)  # ✅ Return only correctly paired files
+        #return zip(flacs, tsvs)
+

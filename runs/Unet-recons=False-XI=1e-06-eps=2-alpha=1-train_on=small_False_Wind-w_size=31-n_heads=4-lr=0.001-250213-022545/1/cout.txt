@@ -1,0 +1,185 @@
+Configuration ([34mmodified[0m, [32madded[0m, [31mtypechanged[0m, [2mdoc[0m):
+  KL_Div = False
+  VAT = True
+  VAT_start = 0
+  XI = 1e-06
+  alpha = 1
+  batch_size = 1                     [2m# 8[0m
+  clip_gradient_norm = 3
+  device = 'cpu'                     [2m# device = 'cuda:0[0m
+  epoches = 1                        [2m# 20000[0m
+  eps = 2
+  iteration = 10
+  learning_rate = 0.001
+  learning_rate_decay_rate = 0.98
+  learning_rate_decay_steps = 1000   [2m# base_lr = learning_rate[0m
+  leave_one_out = None
+  log = True                         [2m# device = "cuda:0" if torch.cuda.is_available() else "cpu"[0m
+  logdir = 'runs/Unet-recons=False-XI=1e-06-eps=2-alpha=1-train_on=small_False_Wind-w_size=31-n_heads=4-lr=0.001-250213-022545'
+  max_lr = 0.0001
+  n_heads = 4
+  onset_stack = True                 [2m# os.environ['CUDA_VISIBLE_DEVICES']=str(GPU)[0m
+  position = True
+  reconstruction = False
+  refresh = False
+  resume_iteration = None
+  root = 'runs'
+  seed = 281664172                   [2m# the random seed for this experiment[0m
+  sequence_length = 327680
+  small = False
+  spec = 'Mel'
+  step_size_up = 100
+  train_batch_size = 1
+  train_on = 'Wind'
+  validation_length = 327680
+  w_size = 31
+Loading 1 group of IDMTGuitarDataset at ./IDMT-SMT-GUITAR_V2
+🔍 Searching in: ./IDMT-SMT-GUITAR_V2\dataset3
+🎵 Found 5 audio files (.flac)
+📜 Found 5 annotation files (.tsv)
+✅ Successfully paired 5 (flac, tsv) files.
+Loading group dataset3: 0it [00:00, ?it/s]Loading group dataset3: 5it [00:00, 116.27it/s]
+Loading 1 group of IDMTGuitarDataset at ./IDMT-SMT-GUITAR_V2
+🔍 Searching in: ./IDMT-SMT-GUITAR_V2\dataset3
+🎵 Found 5 audio files (.flac)
+📜 Found 5 annotation files (.tsv)
+✅ Successfully paired 5 (flac, tsv) files.
+Loading group dataset3: 0it [00:00, ?it/s]Loading group dataset3: 5it [00:00, 1238.43it/s]
+Loading 1 group of IDMTGuitarDataset at ./IDMT-SMT-GUITAR_V2
+🔍 Searching in: ./IDMT-SMT-GUITAR_V2\dataset3
+🎵 Found 5 audio files (.flac)
+📜 Found 5 annotation files (.tsv)
+✅ Successfully paired 5 (flac, tsv) files.
+Loading group dataset3: 0it [00:00, ?it/s]Loading group dataset3: 5it [00:00, 453.52it/s]
+Loading 1 group of IDMTGuitarDataset at ./IDMT-SMT-GUITAR_V2
+🔍 Searching in: ./IDMT-SMT-GUITAR_V2\dataset3
+🎵 Found 5 audio files (.flac)
+📜 Found 5 annotation files (.tsv)
+✅ Successfully paired 5 (flac, tsv) files.
+Loading group dataset3: 0it [00:00, ?it/s]Loading group dataset3: 5it [00:00, 525.44it/s]
+supervised_set size: 5 .
+unsupervised_set size: 5 .
+validation_dataset size: 5 .
+full_validation size: 5 .
+STFT kernels created, time used = 0.1318 seconds
+STFT filter created, time used = 0.0067 seconds
+Mel filter created, time used = 0.0067 seconds
+supervised_loader
+Train Epoch: 1  out of 1 [0/10(0%)]	Main Loss: 2.194426	Train Epoch: 1  out of 1 [1/10(10%)]	Main Loss: 1.895468	Train Epoch: 1  out of 1 [2/10(20%)]	Main Loss: 1.148656	Train Epoch: 1  out of 1 [3/10(30%)]	Main Loss: 0.350296	Train Epoch: 1  out of 1 [4/10(40%)]	Main Loss: 0.121480	Train Epoch: 1  out of 1 [5/10(50%)]	Main Loss: 0.319000	Train Epoch: 1  out of 1 [6/10(60%)]	Main Loss: 0.202485	Train Epoch: 1  out of 1 [7/10(70%)]	Main Loss: 0.177922	Train Epoch: 1  out of 1 [8/10(80%)]	Main Loss: 0.134080	Train Epoch: 1  out of 1 [9/10(90%)]	Main Loss: 0.159236	                                                                                                    Train Epoch: 1 out of 1	Loss: 0.478925
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\transcription.py:163: UserWarning: Estimated notes are empty.
+  warnings.warn("Estimated notes are empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\multipitch.py:278: UserWarning: Estimate frequencies are all empty.
+  warnings.warn("Estimate frequencies are all empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\transcription.py:163: UserWarning: Estimated notes are empty.
+  warnings.warn("Estimated notes are empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\multipitch.py:278: UserWarning: Estimate frequencies are all empty.
+  warnings.warn("Estimate frequencies are all empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\transcription.py:163: UserWarning: Estimated notes are empty.
+  warnings.warn("Estimated notes are empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\multipitch.py:278: UserWarning: Estimate frequencies are all empty.
+  warnings.warn("Estimate frequencies are all empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\transcription.py:161: UserWarning: Reference notes are empty.
+  warnings.warn("Reference notes are empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\transcription.py:163: UserWarning: Estimated notes are empty.
+  warnings.warn("Estimated notes are empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\multipitch.py:278: UserWarning: Estimate frequencies are all empty.
+  warnings.warn("Estimate frequencies are all empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\multipitch.py:285: UserWarning: Reference frequencies are all empty.
+  warnings.warn("Reference frequencies are all empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\multipitch.py:325: UserWarning: Reference frequencies are all empty.
+  warnings.warn("Reference frequencies are all empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\transcription.py:161: UserWarning: Reference notes are empty.
+  warnings.warn("Reference notes are empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\transcription.py:163: UserWarning: Estimated notes are empty.
+  warnings.warn("Estimated notes are empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\multipitch.py:278: UserWarning: Estimate frequencies are all empty.
+  warnings.warn("Estimate frequencies are all empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\multipitch.py:285: UserWarning: Reference frequencies are all empty.
+  warnings.warn("Reference frequencies are all empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\multipitch.py:325: UserWarning: Reference frequencies are all empty.
+  warnings.warn("Reference frequencies are all empty.")
+                            note precision                : 0.000 ± 0.000
+                            note recall                   : 0.000 ± 0.000
+                            note f1                       : 0.000 ± 0.000
+                            note overlap                  : 0.000 ± 0.000
+               note-with-offsets precision                : 0.000 ± 0.000
+               note-with-offsets recall                   : 0.000 ± 0.000
+               note-with-offsets f1                       : 0.000 ± 0.000
+               note-with-offsets overlap                  : 0.000 ± 0.000
+                           frame f1                       : 0.000 ± 0.000
+                        MusicNet micro_avg_P              : 0.078 ± 0.095
+                           frame precision                : 0.000 ± 0.000
+                           frame recall                   : 0.000 ± 0.000
+                           frame accuracy                 : 0.000 ± 0.000
+                           frame substitution_error       : 0.000 ± 0.000
+                           frame miss_error               : 0.600 ± 0.490
+                           frame false_alarm_error        : 0.000 ± 0.000
+                           frame total_error              : 0.600 ± 0.490
+                           frame chroma_precision         : 0.000 ± 0.000
+                           frame chroma_recall            : 0.000 ± 0.000
+                           frame chroma_accuracy          : 0.000 ± 0.000
+                           frame chroma_substitution_error: 0.000 ± 0.000
+                           frame chroma_miss_error        : 0.600 ± 0.490
+                           frame chroma_false_alarm_error : 0.000 ± 0.000
+                           frame chroma_total_error       : 0.600 ± 0.490
+Eval Epoch: 1 [0/5(0%)]	Main Loss: 0.133272Eval Epoch: 1 [1/5(20%)]	Main Loss: 0.078876Eval Epoch: 1 [2/5(40%)]	Main Loss: 0.105650Eval Epoch: 1 [3/5(60%)]	Main Loss: 0.145669Eval Epoch: 1 [4/5(80%)]	Main Loss: 0.059567                                                                                                    Training finished, now evaluating on the MAPS test split (full songs)
+  0%|                                                                                      | 0/5 [00:00<?, ?it/s]⚠️ Warning: sequence_length is None! Setting to default 327680.
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\transcription.py:163: UserWarning: Estimated notes are empty.
+  warnings.warn("Estimated notes are empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\multipitch.py:278: UserWarning: Estimate frequencies are all empty.
+  warnings.warn("Estimate frequencies are all empty.")
+ 20%|███████████████▌                                                              | 1/5 [00:01<00:04,  1.10s/it]D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\transcription.py:161: UserWarning: Reference notes are empty.
+  warnings.warn("Reference notes are empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\transcription.py:163: UserWarning: Estimated notes are empty.
+  warnings.warn("Estimated notes are empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\multipitch.py:278: UserWarning: Estimate frequencies are all empty.
+  warnings.warn("Estimate frequencies are all empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\multipitch.py:285: UserWarning: Reference frequencies are all empty.
+  warnings.warn("Reference frequencies are all empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\multipitch.py:325: UserWarning: Reference frequencies are all empty.
+  warnings.warn("Reference frequencies are all empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\sklearn\metrics\_ranking.py:864: RuntimeWarning: invalid value encountered in true_divide
+  recall = tps / tps[-1]
+ 40%|███████████████████████████████▏                                              | 2/5 [00:02<00:03,  1.11s/it]D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\transcription.py:163: UserWarning: Estimated notes are empty.
+  warnings.warn("Estimated notes are empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\multipitch.py:278: UserWarning: Estimate frequencies are all empty.
+  warnings.warn("Estimate frequencies are all empty.")
+ 60%|██████████████████████████████████████████████▊                               | 3/5 [00:03<00:01,  1.01it/s]D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\transcription.py:163: UserWarning: Estimated notes are empty.
+  warnings.warn("Estimated notes are empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\multipitch.py:278: UserWarning: Estimate frequencies are all empty.
+  warnings.warn("Estimate frequencies are all empty.")
+ 80%|██████████████████████████████████████████████████████████████▍               | 4/5 [00:03<00:00,  1.07it/s]D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\transcription.py:161: UserWarning: Reference notes are empty.
+  warnings.warn("Reference notes are empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\transcription.py:163: UserWarning: Estimated notes are empty.
+  warnings.warn("Estimated notes are empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\multipitch.py:278: UserWarning: Estimate frequencies are all empty.
+  warnings.warn("Estimate frequencies are all empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\multipitch.py:285: UserWarning: Reference frequencies are all empty.
+  warnings.warn("Reference frequencies are all empty.")
+D:\SU-OS\ReconVAT\venv\lib\site-packages\mir_eval\multipitch.py:325: UserWarning: Reference frequencies are all empty.
+  warnings.warn("Reference frequencies are all empty.")
+100%|██████████████████████████████████████████████████████████████████████████████| 5/5 [00:04<00:00,  1.11it/s]100%|██████████████████████████████████████████████████████████████████████████████| 5/5 [00:04<00:00,  1.05it/s]
+                            note precision                : 0.000 ± 0.000
+                            note recall                   : 0.000 ± 0.000
+                            note f1                       : 0.000 ± 0.000
+                            note overlap                  : 0.000 ± 0.000
+               note-with-offsets precision                : 0.000 ± 0.000
+               note-with-offsets recall                   : 0.000 ± 0.000
+               note-with-offsets f1                       : 0.000 ± 0.000
+               note-with-offsets overlap                  : 0.000 ± 0.000
+                           frame f1                       : 0.000 ± 0.000
+                        MusicNet micro_avg_P              : nan ± nan
+                           frame precision                : 0.000 ± 0.000
+                           frame recall                   : 0.000 ± 0.000
+                           frame accuracy                 : 0.000 ± 0.000
+                           frame substitution_error       : 0.000 ± 0.000
+                           frame miss_error               : 0.600 ± 0.490
+                           frame false_alarm_error        : 0.000 ± 0.000
+                           frame total_error              : 0.600 ± 0.490
+                           frame chroma_precision         : 0.000 ± 0.000
+                           frame chroma_recall            : 0.000 ± 0.000
+                           frame chroma_accuracy          : 0.000 ± 0.000
+                           frame chroma_substitution_error: 0.000 ± 0.000
+                           frame chroma_miss_error        : 0.600 ± 0.490
+                           frame chroma_false_alarm_error : 0.000 ± 0.000
+                           frame chroma_total_error       : 0.600 ± 0.490

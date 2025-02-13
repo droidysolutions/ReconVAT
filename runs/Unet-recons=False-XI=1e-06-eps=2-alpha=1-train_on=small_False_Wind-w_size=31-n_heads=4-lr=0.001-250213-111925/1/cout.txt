@@ -1,0 +1,63 @@
+Configuration ([34mmodified[0m, [32madded[0m, [31mtypechanged[0m, [2mdoc[0m):
+  KL_Div = False
+  VAT = True
+  VAT_start = 0
+  XI = 1e-06
+  alpha = 1
+  batch_size = 1                     [2m# 8[0m
+  clip_gradient_norm = 3
+  device = 'cpu'                     [2m# device = 'cuda:0[0m
+  epoches = 1                        [2m# 20000[0m
+  eps = 2
+  iteration = 10
+  learning_rate = 0.001
+  learning_rate_decay_rate = 0.98
+  learning_rate_decay_steps = 1000   [2m# base_lr = learning_rate[0m
+  leave_one_out = None
+  log = True                         [2m# device = "cuda:0" if torch.cuda.is_available() else "cpu"[0m
+  logdir = 'runs/Unet-recons=False-XI=1e-06-eps=2-alpha=1-train_on=small_False_Wind-w_size=31-n_heads=4-lr=0.001-250213-111925'
+  max_lr = 0.0001
+  n_heads = 4
+  onset_stack = True                 [2m# os.environ['CUDA_VISIBLE_DEVICES']=str(GPU)[0m
+  position = True
+  reconstruction = False
+  refresh = False
+  resume_iteration = None
+  root = 'runs'
+  seed = 485246787                   [2m# the random seed for this experiment[0m
+  sequence_length = 327680
+  small = False
+  spec = 'Mel'
+  step_size_up = 100
+  train_batch_size = 1
+  train_on = 'Wind'
+  validation_length = 327680
+  w_size = 31
+Loading 1 group of IDMTGuitarDataset at ./IDMT-SMT-GUITAR_V2
+🔍 files Searching in: ./IDMT-SMT-GUITAR_V2\dataset1
+🎵 Found 400 audio files (.flac)
+📜 Found 400 annotation files (.tsv)
+✅ Successfully paired 400 (flac, tsv) files.
+Loading group dataset1: 0it [00:00, ?it/s]Loading group dataset1: 3it [00:00, 29.90it/s]Loading group dataset1: 7it [00:00, 31.42it/s]Loading group dataset1: 12it [00:00, 35.67it/s]Loading group dataset1: 16it [00:00, 31.81it/s]Loading group dataset1: 20it [00:00, 30.51it/s]Loading group dataset1: 24it [00:00, 32.73it/s]Loading group dataset1: 28it [00:00, 33.38it/s]Loading group dataset1: 32it [00:00, 33.10it/s]Loading group dataset1: 36it [00:01, 32.09it/s]Loading group dataset1: 40it [00:01, 30.44it/s]Loading group dataset1: 44it [00:01, 29.31it/s]Loading group dataset1: 47it [00:01, 28.04it/s]Loading group dataset1: 50it [00:01, 27.49it/s]Loading group dataset1: 53it [00:01, 27.89it/s]Loading group dataset1: 56it [00:01, 27.56it/s]Loading group dataset1: 59it [00:01, 27.54it/s]Loading group dataset1: 63it [00:02, 29.33it/s]Loading group dataset1: 66it [00:02, 29.07it/s]Loading group dataset1: 69it [00:02, 26.30it/s]Loading group dataset1: 72it [00:02, 23.22it/s]Loading group dataset1: 75it [00:02, 23.08it/s]Loading group dataset1: 78it [00:02, 24.24it/s]Loading group dataset1: 81it [00:02, 25.28it/s]Loading group dataset1: 84it [00:02, 25.55it/s]Loading group dataset1: 87it [00:03, 26.37it/s]Loading group dataset1: 90it [00:03, 26.84it/s]Loading group dataset1: 93it [00:03, 26.86it/s]Loading group dataset1: 97it [00:03, 27.93it/s]Loading group dataset1: 101it [00:03, 28.82it/s]Loading group dataset1: 105it [00:03, 29.32it/s]Loading group dataset1: 108it [00:03, 29.39it/s]Loading group dataset1: 112it [00:03, 30.15it/s]Loading group dataset1: 116it [00:04, 30.03it/s]Loading group dataset1: 120it [00:04, 29.13it/s]Loading group dataset1: 123it [00:04, 27.12it/s]Loading group dataset1: 126it [00:04, 24.80it/s]Loading group dataset1: 129it [00:04, 23.19it/s]Loading group dataset1: 133it [00:04, 26.05it/s]Loading group dataset1: 137it [00:04, 27.59it/s]Loading group dataset1: 140it [00:05, 25.60it/s]Loading group dataset1: 143it [00:05, 26.12it/s]Loading group dataset1: 146it [00:05, 24.31it/s]Loading group dataset1: 149it [00:05, 23.67it/s]Loading group dataset1: 152it [00:05, 24.37it/s]Loading group dataset1: 155it [00:05, 24.72it/s]Loading group dataset1: 158it [00:05, 25.79it/s]Loading group dataset1: 161it [00:05, 23.08it/s]Loading group dataset1: 164it [00:06, 24.50it/s]Loading group dataset1: 167it [00:06, 25.27it/s]Loading group dataset1: 171it [00:06, 27.58it/s]Loading group dataset1: 175it [00:06, 28.64it/s]Loading group dataset1: 178it [00:06, 28.81it/s]Loading group dataset1: 181it [00:06, 27.98it/s]Loading group dataset1: 184it [00:06, 28.08it/s]Loading group dataset1: 188it [00:06, 29.24it/s]Loading group dataset1: 192it [00:06, 30.41it/s]Loading group dataset1: 196it [00:07, 30.69it/s]Loading group dataset1: 200it [00:07, 31.00it/s]Loading group dataset1: 204it [00:07, 30.11it/s]Loading group dataset1: 208it [00:07, 29.67it/s]Loading group dataset1: 212it [00:07, 29.85it/s]Loading group dataset1: 215it [00:07, 29.01it/s]Loading group dataset1: 219it [00:07, 30.40it/s]Loading group dataset1: 223it [00:07, 31.29it/s]Loading group dataset1: 227it [00:08, 32.05it/s]Loading group dataset1: 231it [00:08, 32.79it/s]Loading group dataset1: 235it [00:08, 32.75it/s]Loading group dataset1: 239it [00:08, 32.48it/s]Loading group dataset1: 243it [00:08, 32.92it/s]Loading group dataset1: 247it [00:08, 32.02it/s]Loading group dataset1: 251it [00:08, 32.08it/s]Loading group dataset1: 255it [00:08, 30.14it/s]Loading group dataset1: 259it [00:09, 28.34it/s]Loading group dataset1: 262it [00:09, 27.32it/s]Loading group dataset1: 266it [00:09, 28.35it/s]Loading group dataset1: 270it [00:09, 29.59it/s]Loading group dataset1: 274it [00:09, 30.46it/s]Loading group dataset1: 278it [00:09, 27.53it/s]Loading group dataset1: 281it [00:10, 21.59it/s]Loading group dataset1: 284it [00:10, 23.10it/s]Loading group dataset1: 287it [00:10, 23.88it/s]Loading group dataset1: 290it [00:10, 23.62it/s]Loading group dataset1: 293it [00:10, 21.74it/s]Loading group dataset1: 296it [00:10, 19.01it/s]Loading group dataset1: 299it [00:10, 20.24it/s]Loading group dataset1: 302it [00:11, 20.51it/s]Loading group dataset1: 306it [00:11, 23.90it/s]Loading group dataset1: 309it [00:11, 24.83it/s]Loading group dataset1: 312it [00:11, 24.21it/s]Loading group dataset1: 315it [00:11, 25.34it/s]Loading group dataset1: 319it [00:11, 27.26it/s]Loading group dataset1: 323it [00:11, 29.22it/s]Loading group dataset1: 327it [00:11, 31.34it/s]Loading group dataset1: 331it [00:11, 31.21it/s]Loading group dataset1: 335it [00:12, 30.63it/s]Loading group dataset1: 339it [00:12, 29.47it/s]Loading group dataset1: 342it [00:12, 28.81it/s]Loading group dataset1: 345it [00:12, 28.34it/s]Loading group dataset1: 348it [00:12, 28.20it/s]Loading group dataset1: 352it [00:12, 29.37it/s]Loading group dataset1: 356it [00:12, 29.91it/s]Loading group dataset1: 360it [00:12, 31.35it/s]Loading group dataset1: 364it [00:13, 30.52it/s]Loading group dataset1: 368it [00:13, 31.54it/s]Loading group dataset1: 372it [00:13, 32.27it/s]Loading group dataset1: 376it [00:13, 32.52it/s]Loading group dataset1: 380it [00:13, 31.70it/s]Loading group dataset1: 384it [00:13, 30.90it/s]Loading group dataset1: 388it [00:13, 31.80it/s]Loading group dataset1: 392it [00:13, 30.22it/s]Loading group dataset1: 396it [00:14, 30.01it/s]Loading group dataset1: 400it [00:14, 29.10it/s]Loading group dataset1: 400it [00:14, 28.07it/s]
+Loading 1 group of IDMTGuitarDataset at ./IDMT-SMT-GUITAR_V2
+🔍 files Searching in: ./IDMT-SMT-GUITAR_V2\dataset2
+🎵 Found 261 audio files (.flac)
+📜 Found 261 annotation files (.tsv)
+✅ Successfully paired 252 (flac, tsv) files.
+Loading group dataset2: 0it [00:00, ?it/s]Loading group dataset2: 2it [00:00, 18.55it/s]Loading group dataset2: 5it [00:00, 19.42it/s]Loading group dataset2: 8it [00:00, 21.57it/s]Loading group dataset2: 11it [00:00, 22.84it/s]Loading group dataset2: 14it [00:00, 22.44it/s]Loading group dataset2: 17it [00:00, 22.17it/s]Loading group dataset2: 20it [00:00, 21.41it/s]Loading group dataset2: 23it [00:01, 22.34it/s]Loading group dataset2: 26it [00:01, 22.08it/s]Loading group dataset2: 29it [00:01, 21.03it/s]Loading group dataset2: 32it [00:01, 18.62it/s]Loading group dataset2: 34it [00:01, 17.76it/s]Loading group dataset2: 37it [00:01, 18.89it/s]Loading group dataset2: 40it [00:01, 20.44it/s]Loading group dataset2: 43it [00:02, 21.05it/s]Loading group dataset2: 46it [00:02, 21.38it/s]Loading group dataset2: 49it [00:02, 21.66it/s]Loading group dataset2: 52it [00:02, 22.25it/s]Loading group dataset2: 55it [00:02, 23.07it/s]Loading group dataset2: 58it [00:02, 23.91it/s]Loading group dataset2: 61it [00:02, 23.89it/s]Loading group dataset2: 64it [00:02, 24.44it/s]Loading group dataset2: 67it [00:03, 24.58it/s]Loading group dataset2: 70it [00:03, 24.80it/s]Loading group dataset2: 73it [00:03, 24.32it/s]Loading group dataset2: 76it [00:03, 24.28it/s]Loading group dataset2: 79it [00:03, 24.16it/s]Loading group dataset2: 82it [00:03, 23.75it/s]Loading group dataset2: 85it [00:03, 23.71it/s]Loading group dataset2: 88it [00:03, 23.73it/s]Loading group dataset2: 91it [00:04, 23.44it/s]Loading group dataset2: 94it [00:04, 24.84it/s]Loading group dataset2: 97it [00:04, 24.58it/s]Loading group dataset2: 100it [00:04, 22.26it/s]Loading group dataset2: 104it [00:04, 24.75it/s]Loading group dataset2: 108it [00:04, 26.37it/s]Loading group dataset2: 111it [00:04, 26.83it/s]Loading group dataset2: 114it [00:04, 27.21it/s]Loading group dataset2: 118it [00:05, 28.70it/s]Loading group dataset2: 122it [00:05, 29.51it/s]Loading group dataset2: 125it [00:05, 28.48it/s]Loading group dataset2: 128it [00:05, 24.47it/s]Loading group dataset2: 131it [00:05, 20.96it/s]Loading group dataset2: 134it [00:05, 19.97it/s]Loading group dataset2: 137it [00:05, 20.09it/s]Loading group dataset2: 140it [00:06, 21.15it/s]Loading group dataset2: 143it [00:06, 22.53it/s]Loading group dataset2: 146it [00:06, 23.43it/s]Loading group dataset2: 149it [00:06, 23.91it/s]Loading group dataset2: 152it [00:06, 23.93it/s]Loading group dataset2: 155it [00:06, 22.74it/s]Loading group dataset2: 158it [00:06, 24.51it/s]Loading group dataset2: 161it [00:06, 23.34it/s]Loading group dataset2: 164it [00:07, 22.64it/s]Loading group dataset2: 167it [00:07, 21.86it/s]Loading group dataset2: 170it [00:07, 18.10it/s]Loading group dataset2: 173it [00:07, 17.87it/s]Loading group dataset2: 175it [00:07, 16.75it/s]Loading group dataset2: 177it [00:07, 16.12it/s]Loading group dataset2: 179it [00:08, 15.47it/s]Loading group dataset2: 181it [00:08, 15.15it/s]Loading group dataset2: 184it [00:08, 17.88it/s]Loading group dataset2: 187it [00:08, 19.61it/s]Loading group dataset2: 190it [00:08, 19.66it/s]Loading group dataset2: 193it [00:08, 20.84it/s]Loading group dataset2: 196it [00:08, 21.41it/s]Loading group dataset2: 199it [00:09, 21.83it/s]Loading group dataset2: 202it [00:09, 23.39it/s]Loading group dataset2: 205it [00:09, 24.48it/s]Loading group dataset2: 208it [00:09, 24.63it/s]Loading group dataset2: 211it [00:09, 24.34it/s]Loading group dataset2: 214it [00:09, 23.34it/s]Loading group dataset2: 217it [00:09, 24.00it/s]Loading group dataset2: 221it [00:09, 26.84it/s]Loading group dataset2: 225it [00:09, 27.98it/s]Loading group dataset2: 228it [00:10, 28.46it/s]Loading group dataset2: 232it [00:10, 29.33it/s]Loading group dataset2: 236it [00:10, 30.34it/s]Loading group dataset2: 240it [00:10, 30.47it/s]Loading group dataset2: 244it [00:10, 30.57it/s]Loading group dataset2: 248it [00:10, 30.77it/s]Loading group dataset2: 252it [00:10, 28.77it/s]Loading group dataset2: 252it [00:10, 23.12it/s]
+Loading 1 group of IDMTGuitarDataset at ./IDMT-SMT-GUITAR_V2
+🔍 files Searching in: ./IDMT-SMT-GUITAR_V2\dataset3
+🎵 Found 5 audio files (.flac)
+📜 Found 5 annotation files (.tsv)
+✅ Successfully paired 5 (flac, tsv) files.
+Loading group dataset3: 0it [00:00, ?it/s]Loading group dataset3: 3it [00:00, 25.29it/s]Loading group dataset3: 5it [00:00, 26.51it/s]
+Loading 1 group of IDMTGuitarDataset at ./IDMT-SMT-GUITAR_V2
+🔍 files Searching in: ./IDMT-SMT-GUITAR_V2\dataset3
+🎵 Found 5 audio files (.flac)
+📜 Found 5 annotation files (.tsv)
+✅ Successfully paired 5 (flac, tsv) files.
+Loading group dataset3: 0it [00:00, ?it/s]Loading group dataset3: 5it [00:00, 169.04it/s]
+supervised_set size: 400 .
+unsupervised_set size: 252 .
+validation_dataset size: 5 .
+full_validation size: 5 .

@@ -1,0 +1,149 @@
+{
+  "artifacts": [],
+  "command": "train",
+  "experiment": {
+    "base_dir": "D:\\SU-OS\\ReconVAT",
+    "dependencies": [
+      "librosa==0.10.2.post1",
+      "matplotlib==3.5.3",
+      "mir-eval==0.8.0",
+      "nnAudio==0.3.3",
+      "numpy==1.21.6",
+      "pandas==1.1.5",
+      "Pillow==9.5.0",
+      "sacred==0.8.2",
+      "scikit-learn==1.0.2",
+      "scipy==1.7.3",
+      "soundfile==0.13.1",
+      "torch==1.13.1",
+      "tqdm==4.67.1"
+    ],
+    "mainfile": "train_UNet_VAT.py",
+    "name": "train_original",
+    "repositories": [],
+    "sources": [
+      [
+        "model\\Segmentation.py",
+        "_sources\\Segmentation_d08c7f8c0019c9bdc7b7bcd7f525c994.py"
+      ],
+      [
+        "model\\Thickstun_model.py",
+        "_sources\\Thickstun_model_0167870cf73e3ffc5c3f511cf1dd28f4.py"
+      ],
+      [
+        "model\\UNet_onset.py",
+        "_sources\\UNet_onset_44fc0b1eacbe63070da830c33acac17f.py"
+      ],
+      [
+        "model\\Unet_prestack.py",
+        "_sources\\Unet_prestack_58e53aed1ddd618e74be8b258f42cb5d.py"
+      ],
+      [
+        "model\\VAT.py",
+        "_sources\\VAT_3033e3458d34ca3e733157ad37611097.py"
+      ],
+      [
+        "model\\__init__.py",
+        "_sources\\__init___9b981b6a0a4117b95f62d2207d120fec.py"
+      ],
+      [
+        "model\\constants.py",
+        "_sources\\constants_818f0a36c84413bb955a6254d9ebac24.py"
+      ],
+      [
+        "model\\dataset.py",
+        "_sources\\dataset_6d54336c883704317199fc55651a9f9c.py"
+      ],
+      [
+        "model\\decoding.py",
+        "_sources\\decoding_5e4b461732d718e6a6e486187925ba80.py"
+      ],
+      [
+        "model\\evaluate_functions.py",
+        "_sources\\evaluate_functions_0a234a3e83d413629a8db59ea7f8958d.py"
+      ],
+      [
+        "model\\helper_functions.py",
+        "_sources\\helper_functions_177957921fed40f32189ea14dcf94605.py"
+      ],
+      [
+        "model\\midi.py",
+        "_sources\\midi_92d6719a387ab7275ba91880dba25adb.py"
+      ],
+      [
+        "model\\onset_frame_VAT.py",
+        "_sources\\onset_frame_VAT_7626ed61febec2d27f323b493db4c053.py"
+      ],
+      [
+        "model\\self_attention_VAT.py",
+        "_sources\\self_attention_VAT_402e2f9480d2f46e4df5f2254fb02a17.py"
+      ],
+      [
+        "model\\self_attenttion_model.py",
+        "_sources\\self_attenttion_model_ca41b0635973cc8ae7333b0a8e00ba56.py"
+      ],
+      [
+        "model\\utils.py",
+        "_sources\\utils_926f6b5020ad6f7c5f8d685bdd3bda8a.py"
+      ],
+      [
+        "train_UNet_VAT.py",
+        "_sources\\train_UNet_VAT_b713f6f3dfe3543eaa737d011885229d.py"
+      ]
+    ]
+  },
+  "fail_trace": [
+    "Traceback (most recent call last):\n",
+    "  File \"D:\\SU-OS\\ReconVAT\\venv\\lib\\site-packages\\sacred\\config\\captured_function.py\", line 42, in captured_function\n    result = wrapped(*args, **kwargs)\n",
+    "  File \"train_UNet_VAT.py\", line 97, in train\n    dataset='IDMT-Guitar'\n",
+    "  File \"D:\\SU-OS\\ReconVAT\\model\\helper_functions.py\", line 115, in prepare_VAT_dataset\n    sequence_length=sequence_length, device=device, refresh=refresh)\n",
+    "  File \"D:\\SU-OS\\ReconVAT\\model\\dataset.py\", line 582, in __init__\n    super().__init__(path, groups if groups is not None else ['dataset1'], sequence_length, seed, refresh, device)\n",
+    "  File \"D:\\SU-OS\\ReconVAT\\model\\dataset.py\", line 34, in __init__\n    self.data.append(self.load(*input_files)) # self.load is a function defined below. It first loads all data into memory first\n",
+    "  File \"D:\\SU-OS\\ReconVAT\\model\\dataset.py\", line 127, in load\n    for onset, offset, note, vel in midi:\n",
+    "TypeError: cannot unpack non-iterable numpy.float64 object\n"
+  ],
+  "heartbeat": "2025-02-12T20:34:24.284724",
+  "host": {
+    "ENV": {},
+    "cpu": "Unknown",
+    "hostname": "DESKTOP-1QIOTEE",
+    "os": [
+      "Windows",
+      "Windows-10-10.0.19041-SP0"
+    ],
+    "python_version": "3.7.0"
+  },
+  "meta": {
+    "command": "train",
+    "options": {
+      "--beat-interval": null,
+      "--capture": null,
+      "--comment": null,
+      "--debug": false,
+      "--enforce_clean": false,
+      "--file_storage": null,
+      "--force": false,
+      "--help": false,
+      "--loglevel": null,
+      "--mongo_db": null,
+      "--name": null,
+      "--pdb": false,
+      "--print-config": false,
+      "--priority": null,
+      "--queue": false,
+      "--s3": null,
+      "--sql": null,
+      "--tiny_db": null,
+      "--unobserved": false,
+      "COMMAND": null,
+      "UPDATE": [],
+      "help": false,
+      "with": false
+    }
+  },
+  "resources": [],
+  "result": null,
+  "start_time": "2025-02-12T20:34:22.933093",
+  "status": "FAILED",
+  "stop_time": "2025-02-12T20:34:24.300346"
+}
